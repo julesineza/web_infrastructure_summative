@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Medice scanner</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <div class="container">
+        <nav>
+          <div class="logo">Medical Scanner</div>
+          <div class="nav-links">
+            <a href="#welcome">Home</a>
+            <a href="#input-section">Scan</a>
+            <a href="#ocr-preview">Preview</a>
+            <a href="#results">Results</a>
+            <a href="#">About</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Welcome Section -->
+    <section id="welcome">
+      <div class="container">
+        <div class="welcome-content">
+          <h1>MedScan Assist</h1>
+          <p>Scan medicine, check warnings, stay safe.</p>
+          <p>
+            Upload a photo of your medicine, and we'll extract key information
+            to provide FDA safety guidance.
+          </p>
+          <button class="btn" onclick="scrollToSection('input-section')">
+            Get Started
+          </button>
+        </div>
+        <div class="scroll-indicator">
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 5V19M12 19L19 12M12 19L5 12"
+              stroke="#4A70A9"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- Input Section -->
+    <section id="input-section">
+      <div class="container">
+        <h2 class="section-title">How would you like to scan your medicine?</h2>
+
+        <div class="input-options">
+          <!-- Upload Option -->
+          <div
+            class="input-card"
+            onclick="selectInputOption('upload')"
+            id="upload-card"
+          >
+            <div class="input-icon"></div>
+            <h3>Upload Photo</h3>
+            <p>Upload an existing photo of your medicine packaging</p>
+          </div>
+
+          <!-- Camera Option -->
+          <div
+            class="input-card"
+            onclick="selectInputOption('camera')"
+            id="camera-card"
+          >
+            <div class="input-icon"></div>
+            <h3>Take Photo</h3>
+            <p>Use your device camera to capture medicine packaging</p>
+          </div>
+
+          <!-- Text Option -->
+          <div
+            class="input-card"
+            onclick="selectInputOption('text')"
+            id="text-card"
+          >
+            <div class="input-icon"></div>
+            <h3>Enter Text</h3>
+            <p>Manually enter the medicine name or details</p>
+          </div>
+        </div>
+
+        <!-- Upload Content -->
+        <div class="input-content" id="upload-content">
+          <div
+            class="upload-area"
+            onclick="document.getElementById('file-input').click()"
+          >
+            <div class="upload-icon"></div>
+            <p class="upload-text">
+              Drag & drop your image here or click to browse
+            </p>
+            <p class="note">Supported formats: JPG, PNG, PDF</p>
+          </div>
+          <input
+            type="file"
+            id="file-input"
+            accept="image/*"
+            style="display: none"
+            onchange="handleFileUpload(this)"
+          />
+          <div class="button-group">
+            <button class="btn" onclick="processInput('upload')">
+              Process Image
+            </button>
+          </div>
+        </div>
+
+        <!-- Camera Content -->
+        <div class="input-content" id="camera-content">
+          <div class="camera-preview">
+            <div class="camera-placeholder">
+              <div class="input-icon"></div>
+              <video class="camera-placeholder" id="camera" autoplay></video>
+              <canvas class="camera-placeholder" id="photo"></canvas>
+            </div>
+          </div>
+          <div class="button-group">
+            <button class="btn btn-secondary" onclick="handleCamera()">
+              Start Camera
+            </button>
+            <button class="btn" id="capture-btn">Capture Photo</button>
+            <button class="btn" onclick="processInput('camera')">
+              Process Image
+            </button>
+          </div>
+        </div>
+
+        <!-- Text Content -->
+        <div class="input-content" id="text-content">
+          <textarea
+            class="text-input"
+            placeholder="Enter medicine name or details, e.g., 'amoxicillin 500mg oral capsule'"
+          ></textarea>
+          <div class="button-group">
+            <button class="btn" onclick="processInput('text')">
+              Search FDA Database
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OCR Preview Section -->
+    <section id="ocr-preview">
+      <div class="container">
+        <h2 class="section-title">Extracted Text Preview</h2>
+        <div class="ocr-content">
+          <textarea
+            class="ocr-textarea"
+            id="extracted-text"
+            placeholder="Extracted text will appear here..."
+          >
+amoxicillin 500mg oral capsule</textarea
+          >
+          <p class="note">
+            Make sure the text looks correct before continuing.
+          </p>
+          <button class="btn" onclick="searchFDADatabase()">
+            Search FDA Database
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="results">
+      <div class="container">
+        <h2 class="section-title">Drug Information</h2>
+
+        <!-- Loading Skeleton -->
+        <div class="loading-skeleton" id="loading-skeleton">
+          <div class="drug-card">
+            <div class="drug-header">
+              <div class="skeleton-line" style="width: 60%; height: 30px"></div>
+            </div>
+            <div class="drug-info">
+              <div class="skeleton-line" style="width: 40%"></div>
+              <div class="skeleton-line" style="width: 90%"></div>
+              <div class="skeleton-line" style="width: 80%"></div>
+            </div>
+            <div class="drug-info">
+              <div class="skeleton-line" style="width: 35%"></div>
+              <div class="skeleton-line" style="width: 95%"></div>
+              <div class="skeleton-line" style="width: 85%"></div>
+              <div class="skeleton-line" style="width: 70%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drug Information Card -->
+        <div class="drug-card" id="drug-info">
+          <div class="drug-header">
+            <h2 class="drug-name">Amoxicillin</h2>
+          </div>
+
+          <div class="drug-info">
+            <div class="info-label">Active Ingredients</div>
+            <div class="info-content">
+              Amoxicillin (as amoxicillin trihydrate) 500 mg
+            </div>
+          </div>
+
+          <div class="drug-info">
+            <div class="info-label">Indications & Usage</div>
+            <div class="info-content">
+              Amoxicillin is a penicillin antibiotic used to treat bacterial
+              infections, including tonsillitis, bronchitis, pneumonia, and
+              infections of the ear, nose, throat, skin, or urinary tract.
+            </div>
+          </div>
+
+          <div class="drug-info">
+            <div class="info-label">Warnings</div>
+            <div class="info-content">
+              Serious and occasionally fatal hypersensitivity (anaphylactic)
+              reactions have been reported in patients on penicillin therapy.
+              Discontinue amoxicillin if an allergic reaction occurs.
+            </div>
+          </div>
+
+          <div class="drug-info">
+            <div class="info-label">Dosage & Administration</div>
+            <div class="info-content">
+              Adults: 500 mg every 12 hours or 250 mg every 8 hours. For more
+              severe infections: 875 mg every 12 hours or 500 mg every 8 hours.
+            </div>
+          </div>
+
+          <div class="drug-info">
+            <div class="info-label">Possible Side Effects</div>
+            <div class="info-content">
+              Nausea, vomiting, diarrhea, rash, allergic reactions. Contact your
+              doctor if you experience severe diarrhea, abdominal pain, or signs
+              of an allergic reaction.
+            </div>
+          </div>
+
+          <div class="drug-info">
+            <div class="info-label">Drug Interactions</div>
+            <div class="info-content">
+              Probenecid may increase blood levels of amoxicillin. Amoxicillin
+              may reduce the effectiveness of oral contraceptives. Inform your
+              doctor about all medications you are taking.
+            </div>
+          </div>
+        </div>
+
+        <!-- Error States -->
+        <div class="error-state" id="no-results-error" style="display: none">
+          <div class="error-icon">🔍</div>
+          <h3 class="error-message">No results found</h3>
+          <p>
+            We couldn't find any drug information matching your search. Please
+            check the medicine name and try again.
+          </p>
+          <button class="btn" onclick="scrollToSection('input-section')">
+            Try Again
+          </button>
+        </div>
+
+        <div class="error-state" id="extraction-error" style="display: none">
+          <div class="error-icon">📄</div>
+          <h3 class="error-message">Could not extract text</h3>
+          <p>
+            We were unable to extract text from your image. Please try uploading
+            a clearer picture or enter the text manually.
+          </p>
+          <button class="btn" onclick="scrollToSection('input-section')">
+            Try Again
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <p>MedScan Assist - Your medicine safety companion</p>
+        <p>
+          This application is for informational purposes only. Always consult a
+          healthcare professional for medical advice.
+        </p>
+      </div>
+    </footer>
+    <script src="script.js"></script>
+  </body>
+</html>
