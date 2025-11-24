@@ -54,7 +54,7 @@ No backend or server setup is required.
 ---
 
 ## Deployment Guide (Ubuntu + Nginx)
-
+To assess the website from the load balancer visit : http://34.207.164.36
 The application was deployed to two Ubuntu servers using Nginx:
 
 | Server | Role                    | IP Address     |
