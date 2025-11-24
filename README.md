@@ -8,6 +8,9 @@ Pill Assist is a lightweight, static web application that retrieves drug informa
 
 Pill Assist is entirely client-side and relies on the openFDA Drug Label API to provide reliable public data on prescription and over-the-counter medicines. The application requires only a web browser and an internet connection. Axios is used for handling API requests.
 
+##Demo video link
+https://youtu.be/AGzZswept3k
+
 ---
 
 ## Features
